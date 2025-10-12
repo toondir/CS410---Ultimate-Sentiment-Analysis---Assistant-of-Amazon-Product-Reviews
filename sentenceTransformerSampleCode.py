@@ -6,8 +6,10 @@ from sentence_transformers import SentenceTransformer, util
 # 1. Load the JSON dataset
 # ===========================
 reviews = []
-with open("reviews.json", "r") as f:
-    for line in f:
+with open("Software_5.json", "r") as f:
+    for i, line in enumerate(f):
+        if i >= 1000:  # limit to first 10k reviews for speed
+            break
         data = json.loads(line)
         text = data.get("reviewText", "").strip()
         data["combined"] = text  # only use reviewText for embedding
@@ -54,14 +56,14 @@ def search_reviews(query, top_k=5):
 # ===========================
 if __name__ == "__main__":
     queries = [
-        "Is this good for beginners?",
-        "Does it include video tutorials?",
-        "How detailed is the Dreamweaver training?"
+        "Is Microsoft Office 365 any good?",
+        "Tell me about the reviews for Photoshop",
+        "Does Paint Shop work well?"
     ]
 
     for q in queries:
         print(f"\n🔎 Query: {q}")
-        results = search_reviews(q, top_k=3)
+        results = search_reviews(q, top_k=10)
         for i, r in enumerate(results):
             print(f"  {i+1}. [Score: {r['score']:.3f}] (Rating: {r['overall']}) by {r['reviewerName']}")
             print(f"     {r['reviewText'][:200]}...\n")
